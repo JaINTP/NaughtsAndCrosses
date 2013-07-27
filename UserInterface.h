@@ -11,7 +11,7 @@ public:
     UserInterface();
     int menuLoop();
     int getUserMove();
-    void printDebug();
+    void printDebug(COORD curPos);
     void clearScreen();
     int getSelection(COORD curPos);
     void addHistory(int turn, std::string message);

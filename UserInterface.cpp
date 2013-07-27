@@ -48,7 +48,7 @@ int UserInterface::getUserMove() {
     COORD curPos = {27, 7};
     while (true) {
         cHandler.setCursorPos(curPos);
-        printDebug();
+        printDebug(curPos);
         ch = _getch();
         switch (ch) {
         case ENTER:
@@ -70,23 +70,22 @@ int UserInterface::getUserMove() {
 }
 
 /* Prints debug information related to the cursor position. */
-void UserInterface::printDebug() {
-    COORD curPos = cHandler.getCursorPos();
+void UserInterface::printDebug(COORD curPos) {
     cHandler.setCursorPos(5, 13);
     std::cout << "Debug Info";
     cHandler.setCursorPos(2, 17);
     std::cout << "Cursor Coords";
     cHandler.setCursorPos(2, 18);
-    std::cout << ((curPos.X < 10) ? "X:  " : "X: ") << curPos.X;
-    std::cout << ((curPos.Y < 10) ? " Y:  " : " Y: ") << curPos.Y;
+    std::cout << ((curPos.X < 10) ? "X:  " : "X: ") << curPos.X << "  ";
+    std::cout << ((curPos.Y < 10) ? " Y:  " : " Y: ") << curPos.Y << "  ";
     cHandler.setCursorPos(2, 21);
     std::cout << "Aray Coords";  
     cHandler.setCursorPos(2, 22);
-    std::cout << "X: " << (curPos.X - 23) / 4 << " Y: "<< (curPos.Y - 5) / 2;
+    std::cout << "X: " << (curPos.X - 23) / 4 << " Y: "<< (curPos.Y - 5) / 2 << "  ";
     cHandler.setCursorPos(2, 19);
-    std::cout << "VecPos: " << getSelection(curPos);
+    std::cout << "VecPos: " << getSelection(curPos) << "  ";
     cHandler.setCursorPos(2, 23);
-    std::cout << "RowMul: " << (curPos.Y -2) / 2;
+    std::cout << "RowMul: " << (curPos.Y -2) / 2 << "  ";
     cHandler.setCursorPos(curPos);
 }
 
@@ -115,7 +114,8 @@ void UserInterface::clearScreen() {
  * Returns the index of the array pointed to by the cursor.
  */
 int UserInterface::getSelection(COORD curPos) {
-    return (((curPos.Y - 5) / 2)* 3) + ((curPos.X - 23) / 4);
+    int sel = (((curPos.Y - 5) / 2)* 3) + ((curPos.X - 23) / 4);
+    return (sel <= 8 && sel >= 0) ? sel : -1;
 }
 
 /* Adds a record to the game history.
@@ -153,6 +153,7 @@ void UserInterface::printBoard(const std::vector<char> &board) {
  * board: A read-only reference to a vector.
  */
 void UserInterface::printScreen(const std::vector<char> &board) {
+    COORD curPos = cHandler.getCursorPos();
     /****** Separators ******/
     cHandler.setCursorPos(0, 3);
     for (int i = 0; i < 50; i++)
@@ -204,7 +205,7 @@ void UserInterface::printScreen(const std::vector<char> &board) {
     std::cout << "Player 2";
     /************************/
     /******** Debug *********/
-    printDebug();
+    printDebug(curPos);
     /************************/
 }
 
